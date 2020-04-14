@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Paginationjs example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link href="pagination.css" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    ul,
+    li {
+      list-style: none;
+    }
+
+    #wrapper {
+      width: 900px;
+      margin: 20px auto;
+    }
+
+    .data-container {
+      margin-top: 20px;
+    }
+
+    .data-container ul {
+      padding: 0;
+      margin: 0;
+    }
+
+    .data-container li {
+      margin-bottom: 5px;
+      padding: 5px 10px;
+      background: rgb(204, 204, 204);
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="wrapper">
+    <section>
+      <div class="data-container"></div>
+      <div id="pagination-demo1"></div>
+    </section>
+  </div>
+
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="pagination.js"></script>
+  <script>
+    let lista = [];
+    fetch('https://jsonplaceholder.typicode.com/todos')
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(datito => {
+          lista.push(datito.title);
+        })
+        $(function () {
+          (function (name) {
+            var container = $('#pagination-' + name);
+
+            var options = {
+              dataSource: lista,
+              locator: 'items',
+              totalNumber: 120,
+              pageSize: 20,
+              ajax: {
+                beforeSend: function () {
+                  container.html('Loading data from flickr.com ...');
+                }
+              },
+              callback: function (response, pagination) {
+                window.console && console.log(response, pagination);
+
+                var dataHtml = '<ul>';
+
+                $.each(response, function (index, item) {
+                  dataHtml += '<li>' + item + '</li>';
+                });
+
+                dataHtml += '</ul>';
+
+                container.prev().html(dataHtml);
+              }
+            };
+            //$.pagination(container, options);
+
+            container.pagination(options);
+
+          })('demo1');
+
+        })
+      });
+  </script>
+</body>
+
+</html>
